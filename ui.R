@@ -31,11 +31,13 @@ shinyUI(navbarPage("Sample Size Calculator",
     sidebarLayout(
       #Sidebar with controls 
       sidebarPanel(
-        sliderInput("Test_sens", "Test Sensitivity (%):", min=55,max=100,value=65,step=1),
+        sliderInput("Test_sens", "Test Sensitivity (%):", min=35,max=100,value=65,step=1),
         sliderInput("Test_spec", "Test Specificity (%):", min=55,max=100,value=80,step=1),
-        sliderInput("Herd_spec", "Herd Specificity (%):", min=55,max=99,value=65,step=1),
+        sliderInput("Herd_spec", "Minimum Desired Herd Specificity (%):", min=55,max=99,
+                    value=65,step=1),
         sliderInput("Conf_slider","Confidence (%)", min=90,max=99,value=95,step=1),
-        sliderInput("Prev", "Animal level (within herd) Prevalence (%)", min=1,max=50,value=20,step=1),
+        sliderInput("Prev", "Animal level Prevalence (%)", min=1,max=50,value=20,step=1),
+        sliderInput("Herd_prev", "Herd level Prevalence (%)", min=1,max=50,value=5,step=1),
         numericInput("Herd_size", "Herd Size:", 200, min=1, max=2000, step=1),
         checkboxInput("Log","Take Log of Number of Herds",value=FALSE),
         ###Action button
@@ -58,6 +60,7 @@ shinyUI(navbarPage("Sample Size Calculator",
     bsTooltip("Herd_spec","Select your Herd level specificity.","right","hover"),
     bsTooltip("Conf_slider","Select the confidence you would like for the result.","right","hover"),
     bsTooltip("Prev","Select the minimum within Herd Prevalence for a positive herd for you chosen disease.","right","hover"),
+    bsTooltip("Herd_prev","Select the Herd Prevalence for a positive herd for you chosen disease.","right","hover"),
     bsTooltip("Herd_size","Input your herd size. The value must be between 1 and 2000.","right","hover"),
     bsTooltip("Log","Reduce the values of the vertical axis by taking base 10 Log of the values. This will make it easier to differentiate between som of the values.","right","hover")
     #finishing column
