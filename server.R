@@ -9,7 +9,7 @@ Tol = c(0.01,0.05,0.10)
 
 `%then%` = shiny:::`%OR%`
 
-# Define server logic 
+# Define server Logic 
 shinyServer(function(input, output, session) {
 #Reactive function to generate results
 Results = reactive({
@@ -80,9 +80,9 @@ Results = reactive({
 #Reactive function to plot results
 make_ggvis = reactive({
 if(!is.null(Results()[[1]])){
-  Orange = colorRampPalette(c("darkorange3","orange"))
+  Orange = colorRampPalette(c("darkorange4","gold"))
   Blue = colorRampPalette(c("darkblue","lightblue"))
-    if(input$log==FALSE){
+    if(input$Log==FALSE){
 #Plot results    
       Results()[[1]] %>%
         dplyr::mutate(Sensitivity = factor(Herd.Sensitivity),Tolerance = factor(Tolerance)) %>%
@@ -114,7 +114,7 @@ if(!is.null(Results()[[1]])){
                           "<p>- the number of animals is",df$Number.Animals,"<p/>")) %>%
                     set_options(duration=0)
     }else{
-#Plot results with log scale
+#Plot results with Log scale
       Results()[[1]] %>%
         dplyr::mutate(Sensitivity = factor(Herd.Sensitivity),Tolerance = factor(Tolerance)) %>%
         ggvis(x=~Number.Animals,y=~log10(Number.Herds)) %>% 
@@ -144,7 +144,7 @@ if(!is.null(Results()[[1]])){
                 "<p>- the number of herds to be sampled is",df$Number.Herds,".<p/>",
                 "<p>- the number of animals is",df$Number.Animals,"<p/>")) %>%
         set_options(duration=0)
-  #finishing log if statement
+  #finishing Log if statement
     }
 }
 })  
@@ -179,7 +179,19 @@ output$error_text = renderUI({
   } 
 })
 
-
+#Notes - to sit just below the plot for a little more explanation
+output$notes = renderUI({
+  if(nrow(Results()[[1]])!=0){ #only plot notes if we actually have results
+    HTML('<p style="font-size:18px; font-weight:bold; text-align:left"> 
+         Notes 
+         </p>
+         <p style="font-size:15px; text-align:left"> 
+          Note that by increasing the number of animals tested within the herd, the herd level sensitivity
+          increases and thus fewer herds will be required. How best to optimise this trade-off will depend 
+          on the marginal cost of testing an extra animal compared to the marginal cost of testing an extra herd.
+         </p>')
+  }
+  })
 
 #Table
 output$Results_table = renderDataTable({
