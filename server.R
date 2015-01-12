@@ -107,15 +107,15 @@ if(!is.null(Results()[[1]])){
         add_axis("x",title="Number of animals tested per herd") %>%
         add_axis("y",title="Number of Herds",title_offset = 75) %>%
         add_tooltip(function(df) 
-                    paste("<p>With a tolerance of",df$Tolerance,"and a Herd sensitivity of &ge;",df$Sensitivity,"(",df$Calc.Herd.Sensitivity,")","</p>",
-                          "<p>- the number of herds to be sampled is",df$Number.Herds,".<p/>",
+                    paste("<p>With a tolerance of",df$Tolerance,"and a Herd sensitivity of &ge;",df$Sensitivity,"</p>",
+                          "<p>- the number of herds to be sampled is",df$Number.Herds,"<p/>",
                           "<p>- the number of animals is",df$Number.Animals,"<p/>")) %>%
                     set_options(duration=0)
     }else{
 #Plot results with Log scale
       Results()[[1]] %>%
-        dplyr::mutate(Sensitivity = factor(Herd.Sensitivity),Tolerance = factor(Tolerance)) %>%
-        ggvis(x=~Number.Animals,y=~log10(Number.Herds)) %>% 
+        dplyr::mutate(Sensitivity = factor(Herd.Sensitivity),Tolerance = factor(Tolerance),Log.Herds = log10(Number.Herds)) %>%
+        ggvis(x=~Number.Animals,y=~Log.Herds) %>% 
         group_by(Tolerance) %>%
         layer_paths(stroke=~Tolerance,strokeWidth:=2) %>%
         scale_nominal("stroke",
@@ -138,8 +138,7 @@ if(!is.null(Results()[[1]])){
         add_axis("x",title="Number of animals tested per herd") %>%
         add_axis("y",title="Log(Number of Herds)",title_offset = 75) %>%
         add_tooltip(function(df) 
-                    paste("<p>With a tolerance of",df$Tolerance,"and a Herd sensitivity of &ge;",df$Sensitivity,"(",df$Calc.Herd.Sensitivity,")","</p>",
-                          "<p>- the number of herds to be sampled is",df$Number.Herds,".<p/>",
+                    paste("<p>With a tolerance of",df$Tolerance,"and a Herd sensitivity of &ge;",,"</p>",
                           "<p>- the number of animals is",df$Number.Animals,"<p/>")) %>%
                     set_options(duration=0)
   #finishing Log if statement
