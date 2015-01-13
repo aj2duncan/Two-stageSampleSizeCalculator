@@ -43,5 +43,13 @@ Temporary Items
 .apdisk
 .Rproj.user
 
+# ===========================
+# User Specific
+# ===========================
+www/
+shinyapps/
+
+
+
 
 

@@ -1,10 +1,17 @@
 ---
-title: "Background"
+title: "Two-Stage Sample Size Calculator"
 author: "Andrew Duncan"
 date: ""
 output: html_document
 ---
-### Background to the Sample Size Calculator
+
+<div style='text-align:justify'>
+<div style='text-align:center'>
+<a target="_blank"><img src="CattleHeader.png"></a>
+</div>
+
+
+### Two-Stage Sample Size Calculator
 
 This calculator is intended to help design surveys to estimate Herd Level Prevalence when the individual test is imperfect (1).
 
@@ -32,6 +39,20 @@ The results are expressed as the number of animals needing tested plotted agains
 
 [1]:[Humphry et. al., 2004, A Practical Approach to calculate sample size for her prevalence surveys, Prev. Vet Med., 65, 173-188.](http://www.sciencedirect.com/science/article/pii/S0167587704001412)
 
- 
+------
+
+This two-stage sample size calculator was built by <a target="_blank" href="http://www.aj2duncan.com">Andrew Duncan</a>. If you have any comments or suggestions about improvements that can be made please get in [touch](<mailto:andrew.duncan.ic@uhi.ac.uk>).
 
 
+<div style='text-align:center'>
+<a target="_blank" href="http:///www.sruc.ac.uk"><img src="SRUC-logo.png"></a>
+<a target="_blank" href="http://www.inverness.uhi.ac.uk/"><img src="IC-logo.jpg"></a> 
+</div>
+
+------
+
+This was funded by the <a target="_blank" href="http://www.scotland.gov.uk/">Scottish Government</a> within the RESAS WP6.5 knowledge transfer programme.
+<div style='text-align:center'>
+<a target="_blank" href="http://www.scotland.gov.uk/"><img src="SG-logo.png"></a>
+</div>
+</div> 
