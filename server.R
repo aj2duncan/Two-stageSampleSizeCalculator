@@ -22,14 +22,7 @@ Results = reactive({
                detail = "Please wait...",
                value=0,{
                  Sys.sleep(1)
-  
-  #validating input
-  validate(
-      need(isolate(input$Herd_size)!="","Please enter a Herd size") %then%
-      need(isolate(input$Herd_size)>0, "Please enter a positive Herd size") %then%
-      need(isolate(input$Herd_size)<3000, "Please enter a Herd size of less than 3000.")
-  )  
-  
+
   #getting input
   input$goButton  #reactive on pressing of button not on changing of values
                   #values below are isolated
@@ -50,15 +43,17 @@ Results = reactive({
     for(i in c(1:3)){
       Number_herds = num_herds(Conf,Tol[i],Calc_herd_sens,Calc_herd_spec,Herd_prev)
       Results_local = rbind(Results_local,
-                            c(Conf,Tol[i],Herd_sens[j],
-                            Calc_herd_sens,Calc_herd_spec,
-                            Number_herds,Number_animals[1],Number_animals[2])) 
+                            c(Test_sens,Test_spec,Herd_size,Prev,Herd_prev,
+                              Conf,Tol[i],Herd_sens[j],Herd_spec,
+                              Calc_herd_sens,Calc_herd_spec,
+                              Number_herds,Number_animals[1],Number_animals[2])) 
     }
     #update progress bar
     incProgress(1/3)
   }
-    
-  colnames(Results_local) = c("Confidence","Tolerance","Herd.Sensitivity",
+  colnames(Results_local) = c("Test.Sensitivity","Test.Specificity","Herd.Size","Prevalence",
+                              "Herd.Prevalence","Confidence","Tolerance",
+                              "Herd.Sensitivity","Herd.Specificity",
                               "Calc.Herd.Sensitivity","Calc.Herd.Specificity",
                               "Number.Herds","Number.Animals","Cutpoint")
   Results_local = data.frame(Results_local,row.names=NULL)
@@ -152,7 +147,7 @@ if(!is.null(Results()[[1]])){
 make_ggvis %>% bind_shiny("ggvis", "ggvis_ui")
 
 #Plot Title
-output$plot_title = renderUI({
+output$Plot_title = renderUI({
   if(nrow(Results()[[1]])!=0){ #only plot title if we actually have results
     HTML('<p style="font-size:20px; font-weight:bold; text-align:center"> 
         Number of Herds Sampled vs Number of Animals Sampled 
@@ -161,7 +156,7 @@ output$plot_title = renderUI({
 })
 
 #Errors
-output$error_text = renderUI({
+output$Error_text = renderUI({
   #if there were values we couldn't calculate output those with errors
   if(nrow(Results()[[1]])==0){ #if we have no results at all
   
@@ -177,7 +172,7 @@ output$error_text = renderUI({
 })
 
 #Notes - to sit just below the plot for a little more explanation
-output$notes = renderUI({
+output$Plot_notes = renderUI({
   if(nrow(Results()[[1]])!=0){ #only plot notes if we actually have results
     HTML('<p style="font-size:18px; font-weight:bold; text-align:left"> 
          Notes 
@@ -197,7 +192,7 @@ output$notes = renderUI({
 
 #Table
 output$Results_table = renderDataTable({
-  data = Results()[[2]][,-c(1,8)]
+  data = Results()[[2]][,-c(1:6,9,14)]
   data[,c(1,2)] = 100*data[c(1,2)]
   data[,c(3,4)] = 100*round(data[c(3,4)],4)
   colnames(data)=c("Tolerance(%)<br>&nbsp;","Minimum Desired<br>Herd Sensitivity(%)",
@@ -207,6 +202,15 @@ output$Results_table = renderDataTable({
   options = list(paging=FALSE,searching=FALSE)
 )
 
+#Table notes 
+output$Table_notes = renderUI({
+  HTML('<p style="font-size:18px; font-weight:bold; text-align:left"> 
+         Notes 
+         </p>
+         <p style="font-size:15px; text-align:left"> 
+         The .csv file ready for download contains all input values in addition to the output values shown above.
+         </p>')
+  })
 
 #Exporting Results
 output$Export_results <- downloadHandler(

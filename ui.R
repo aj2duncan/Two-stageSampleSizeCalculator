@@ -47,10 +47,10 @@ shinyUI(navbarPage("Sample Size Calculator",
       ,width=3),           
       #Main panel with all the output
       mainPanel(
-          uiOutput("error_text"),
-          uiOutput("plot_title"),
+          uiOutput("Error_text"),
+          uiOutput("Plot_title"),
           ggvisOutput("ggvis"),
-          uiOutput("notes")
+          uiOutput("Plot_notes")
       #finishing mainPanel
       ,width=7) 
     #finishing sidebarlayout                 
@@ -76,7 +76,8 @@ shinyUI(navbarPage("Sample Size Calculator",
       column(2), #blank for the moment
       column(8,
              downloadButton("Export_results", "Export Results as CSV file"),
-             dataTableOutput("Results_table")  
+             dataTableOutput("Results_table"),
+             uiOutput("Table_notes")
       ),
       column(2) #blank for the moment         
     )
