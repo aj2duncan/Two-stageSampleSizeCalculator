@@ -41,7 +41,7 @@ The results are expressed as the number of animals needing tested plotted agains
 
 ------
 
-This two-stage sample size calculator was built by <a target="_blank" href="http://www.aj2duncan.com">Andrew Duncan</a>. If you have any comments or suggestions about improvements that can be made please get in [touch](<mailto:andrew.duncan.ic@uhi.ac.uk>).
+This two-stage sample size calculator was built by <a target="_blank" href="http://www.aj2duncan.com">Andrew Duncan</a>. If you have any comments or suggestions about improvements that can be made please get in [touch](<mailto:andrew.duncan.ic@uhi.ac.uk>). If you are interested in developing this further, the code is currently hosted on <a target="_blank" href="https://github.com/aj2duncan/Two-stageSampleSizeCalculator">Github</a>.
 
 
 <div style='text-align:center'>
