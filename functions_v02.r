@@ -27,7 +27,7 @@ P_in = function(x,y,n,Se,Sp,d,N){
 #calculate sample size (number of animals)
 num_anim = function(Se,Sp,prev,N,alpha,beta){
 #eps = 0.0001 #not actually used
-d = round(prev*N)
+d = ceiling(prev*N)
 
 #check whether cut-point and sample size satisfy alpha
 n = 1
@@ -72,7 +72,7 @@ return(c(sample_size,sample_cutpoint,calc_herd_sens,calc_herd_spec))
 
 #calculate number of herds
 num_herds = function(C,L,HSENS,HSPEC,HTP){
-  Z = qnorm(C)
+  Z = qnorm(1-(1-C)/2)
   Numerator = (HSENS*HTP+(1-HSPEC)*(1-HTP))*(1-HSENS*HTP-(1-HSPEC)*(1-HTP))
   Denominator = (HSENS+HSPEC-1)^2
   HN = ceiling((Z/L)^2 * (Numerator/Denominator))
