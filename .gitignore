@@ -48,7 +48,8 @@ Temporary Items
 # ===========================
 www/
 shinyapps/
-
+deploy.r
+runapp.r
 
 
 
