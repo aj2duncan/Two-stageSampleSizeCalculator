@@ -2,8 +2,10 @@ library(shiny)
 library(ggvis)
 library(markdown)
 library(shinyBS)
+library(shinybootstrap2)
 
-
+#Using shinybootstrap2 package for shinyBS tooltips
+withBootstrap2({
 # Define UI 
 shinyUI(navbarPage("Sample Size Calculator",
   tabPanel("Background",
@@ -85,4 +87,6 @@ shinyUI(navbarPage("Sample Size Calculator",
   )
 #finishing shinyUI                   
 ))
+#finishing shinybootstrap2
+})
 

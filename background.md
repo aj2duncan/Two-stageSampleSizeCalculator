@@ -30,6 +30,7 @@ The calculator is controlled using the inputs on the left-hand side of the __Gra
 * Test Specificity
 * Herd Specificity
 * Confidence of Result
+* An a priori estimate of the between herd prevalence (aka ‘herd level prevalence’) for the disease
 * Within Herd Prevalence of the Disease
 * Herd Size
 

@@ -199,7 +199,7 @@ output$Results_table = renderDataTable({
                    "Calculated<br>Herd Sensitivity(%)","Calculated<br>Herd Specificity(%)",
                    "Number of<br>Herds","Number of<br>Animals")
   return(data)}, 
-  options = list(paging=FALSE,searching=FALSE)
+  options = list(paging=FALSE,searching=FALSE),escape=FALSE
 )
 
 #Table notes 
