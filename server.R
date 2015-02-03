@@ -1,17 +1,15 @@
 library(shiny)
 library(ggvis)
 library(dplyr)
-library(xtable)
 source("functions_v02.r",local=TRUE)
 
+#Default values for Herd Sensitivity and Tolerance
 Herd_sens = c(0.55,0.65,0.75,0.85,0.95)
-Tol = c(0.01,0.05,0.10)
+Tol = c(0.025,0.05,0.10)
 
-`%then%` = shiny:::`%OR%`
-
-# Define server Logic 
+#start shiny function
 shinyServer(function(input, output, session) {
-#Reactive function to generate results
+#start main reactive function  
 Results = reactive({
   Results_local = c()
   Calc_herd_sens = 0
@@ -24,7 +22,7 @@ Results = reactive({
                  Sys.sleep(1)
 
   #getting input
-  input$goButton  #reactive on pressing of button not on changing of values
+  input$goButton  #reactive on pressing button not on changing of values
                   #values below are isolated
   Test_sens = isolate(input$Test_sens/100)
   Test_spec = isolate(input$Test_spec/100)
@@ -33,7 +31,7 @@ Results = reactive({
   Herd_size = isolate(input$Herd_size)
   Prev = isolate(input$Prev/100)
   Herd_prev = isolate(input$Herd_prev/100)
-    
+
   #Generate results for different tolerances
   #Generate results for different herd sensitivities
   for(j in c(1:length(Herd_sens))){
@@ -47,10 +45,10 @@ Results = reactive({
                               Conf,Tol[i],Herd_sens[j],Herd_spec,
                               Calc_herd_sens,Calc_herd_spec,
                               Number_herds,Number_animals[1],Number_animals[2])) 
-    }
+    }#finish i
     #update progress bar
     incProgress(1/3)
-  }
+  }#finish j
   colnames(Results_local) = c("Test.Sensitivity","Test.Specificity","Herd.Size","Prevalence",
                               "Herd.Prevalence","Confidence","Tolerance",
                               "Herd.Sensitivity","Herd.Specificity",
@@ -63,7 +61,7 @@ Results = reactive({
   }else{
     Results_without_errors = Results_local
   }
-  Results_with_errors$Number.Animals[which(Results_with_errors$Number.Animals==-1)] = "Not Available"
+  Results_with_errors$Number.Animals[which(Results_with_errors$Number.Animals==-1)] = "Insufficient animals to achieve desired test performance."
   return(list(Results_without_errors,Results_with_errors))
   #finishing progress bar
   })
@@ -109,7 +107,8 @@ if(!is.null(Results()[[1]])){
     }else{
 #Plot results with Log scale
       Results()[[1]] %>%
-        dplyr::mutate(Sensitivity = factor(Herd.Sensitivity),Tolerance = factor(Tolerance),Log.Herds = log10(Number.Herds)) %>%
+        dplyr::mutate(Sensitivity = factor(Herd.Sensitivity),
+                      Tolerance = factor(Tolerance),Log.Herds = log10(Number.Herds)) %>%
         ggvis(x=~Number.Animals,y=~Log.Herds) %>% 
         group_by(Tolerance) %>%
         layer_paths(stroke=~Tolerance,strokeWidth:=2) %>%
@@ -132,10 +131,10 @@ if(!is.null(Results()[[1]])){
                    )) %>%
         add_axis("x",title="Number of animals tested per herd") %>%
         add_axis("y",title="Log(Number of Herds)",title_offset = 75) %>%
-        add_tooltip(function(df) 
-                    paste("<p>With a tolerance of",df$Tolerance,"and a Herd sensitivity of &ge;",,"</p>",
-                          "<p>- the number of animals is",df$Number.Animals,"<p/>")) %>%
-                    set_options(duration=0)
+#        add_tooltip(function(df) 
+#                    paste("<p>With a tolerance of",df$Tolerance,"and a Herd sensitivity of &ge;",df$Sensitivity,"</p>",
+#                          "<p>- the number of animals is",df$Number.Animals,"<p/>")) %>%
+                          set_options(duration=0)
   #finishing Log if statement
     }
 }
@@ -195,9 +194,9 @@ output$Results_table = renderDataTable({
   data = Results()[[2]][,-c(1:6,9,14)]
   data[,c(1,2)] = 100*data[c(1,2)]
   data[,c(3,4)] = 100*round(data[c(3,4)],4)
-  colnames(data)=c("Tolerance(%)<br>&nbsp;","Minimum Desired<br>Herd Sensitivity(%)",
-                   "Calculated<br>Herd Sensitivity(%)","Calculated<br>Herd Specificity(%)",
-                   "Number of<br>Herds","Number of<br>Animals")
+  colnames(data)=c("Tolerance(%)","Minimum Desired Herd Sensitivity(%)",
+                   "Calculated Herd Sensitivity(%)","Calculated Herd Specificity(%)",
+                   "Number of Herds","Number of Animals")
   return(data)}, 
   options = list(paging=FALSE,searching=FALSE),escape=FALSE
 )

@@ -32,7 +32,7 @@ The calculator is controlled using the inputs on the left-hand side of the __Gra
 * Confidence of Result
 * An a priori estimate of the between herd prevalence (aka ‘herd level prevalence’) for the disease
 * Within Herd Prevalence of the Disease
-* Herd Size
+* Herd Size - where herd sizes vary substantially then the simplest approach is to seek to achieve the same minimum herd sensitivity and specificity for each size class of herd. That is best done directly using <a target="_blank" href="http://www.ausvet.com.au/content.php?page=software#freecalc">Freecalc</a>.
 
 The results are expressed as the number of animals needing tested plotted against the number of herds. A range of values for tolerance and herd sensitivity are given. For more information, hover over the individual points.
 
