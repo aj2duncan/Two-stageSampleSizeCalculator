@@ -24,7 +24,7 @@ P_in = function(x,y,n,Se,Sp,d,N){
   return(dhyper(y,d,N-d,n)*P)
 }
 
-#calculate sample size (number of animals)
+#function to calculate sample size (number of animals)
 num_anim = function(Se,Sp,prev,N,alpha,beta){
 #eps = 0.0001 #not actually used
 d = ceiling(prev*N)
@@ -70,7 +70,7 @@ return(c(sample_size,sample_cutpoint,calc_herd_sens,calc_herd_spec))
 }
 
 
-#calculate number of herds
+#function calculate number of herds
 num_herds = function(C,L,HSENS,HSPEC,HTP){
   Z = qnorm(1-(1-C)/2)
   Numerator = (HSENS*HTP+(1-HSPEC)*(1-HTP))*(1-HSENS*HTP-(1-HSPEC)*(1-HTP))
@@ -78,3 +78,43 @@ num_herds = function(C,L,HSENS,HSPEC,HTP){
   HN = ceiling((Z/L)^2 * (Numerator/Denominator))
   return(HN)
 }
+
+
+#function to return blank dataframes
+return_blanks = function(){
+  Results_without_errors = as.data.frame(cbind(Test.Sensitivity=numeric(0),
+                                               Test.Specificity=numeric(0),
+                                               Herd.Size=numeric(0),
+                                               Prevalence=numeric(0),
+                                               Herd.Prevalence=numeric(0),
+                                               Confidence=numeric(0),
+                                               Tolerance=numeric(0),
+                                               Herd.Sensitivity=numeric(0),
+                                               Herd.Specificity=numeric(0),
+                                               Calc.Herd.Sensitivity=numeric(0),
+                                               Calc.Herd.Specificity=numeric(0),
+                                               Number.Herds=numeric(0),
+                                               Number.Animals=numeric(0),
+                                               Cutpoint=numeric(0)))
+  Results_with_errors = as.data.frame(cbind(Test.Sensitivity=numeric(0),
+                                            Test.Specificity=numeric(0),
+                                            Herd.Size=numeric(0),
+                                            Prevalence=numeric(0),
+                                            Herd.Prevalence=numeric(0),
+                                            Confidence=numeric(0),
+                                            Tolerance=numeric(0),
+                                            Herd.Sensitivity=numeric(0),
+                                            Herd.Specificity=numeric(0),
+                                            Calc.Herd.Sensitivity=numeric(0),
+                                            Calc.Herd.Specificity=numeric(0),
+                                            Number.Herds=numeric(0),
+                                            Number.Animals=numeric(0),
+                                            Cutpoint=numeric(0)))
+  test_flag = 1
+  return(list(Results_without_errors,Results_with_errors,test_flag))
+}
+
+
+
+
+
