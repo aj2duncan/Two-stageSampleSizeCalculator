@@ -9,7 +9,7 @@ shinyUI(navbarPage("Sample Size Calculator",
 #Background tab
 ############################################
   tabPanel("Background",
-#    includeCSS("css/bootstrap.css"),
+    includeCSS("css/bootstrap.css"),
     includeCSS("css/styles.css"),
     fluidRow(
       column(2),#blank for the moment
