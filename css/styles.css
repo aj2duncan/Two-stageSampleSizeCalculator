@@ -1,3 +1,9 @@
+a,
+a:hover,
+a:focus {
+  color: #006633;
+}
+
 .navbar-default {
   border-color: #006633;
   border-style: solid;
@@ -49,11 +55,9 @@
 .navbar-default .navbar-brand:focus {
   color: #006633;
 }
-  
-a,
-a:hover,
-a:focus {
-  color: #006633;
+
+.navbar-default .navbar-brand .navbar-link {
+  text-decoration: none;  
 }
 
 /* changing color of sliders */

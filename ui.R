@@ -3,8 +3,24 @@ library(ggvis)
 library(markdown)
 library(shinyBS)
 
+
 # Define UI 
-shinyUI(navbarPage("Sample Size Calculator",
+###########################################
+# constructing navbar with logo
+###########################################
+shinyUI(fluidPage(
+  list(tags$head(HTML('<link rel="icon", href="SRUC-logo.png", 
+                      type="image/png" />'))),
+  div(style="padding: 1px 0px; width: '100%';",
+      titlePanel(
+        title="", windowTitle="Two-stage Sample Size Calculator"
+      )
+  ),
+  navbarPage(
+    title=div(a(href="http://www.sruc.ac.uk", class="navbar-link",
+                target="_blank",
+                img(src="SRUC-logo.png", height="50px")), 
+              "Sample Size Calculator"),
 ############################################
 #Background tab
 ############################################
@@ -98,5 +114,7 @@ shinyUI(navbarPage("Sample Size Calculator",
     )
   #finishing tabPanel
   )
-#finishing shinyUI                   
+  #finishing navbarpage
+  )
+#finishing fluidpage and shiny UI
 ))
