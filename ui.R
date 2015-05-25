@@ -2,6 +2,7 @@ library(shiny)
 library(ggvis)
 library(markdown)
 library(shinyBS)
+library(DT)
 
 
 # Define UI 
@@ -9,17 +10,17 @@ library(shinyBS)
 # constructing navbar with logo
 ###########################################
 shinyUI(fluidPage(
-  list(tags$head(HTML('<link rel="icon", href="SRUC-logo.png", 
-                      type="image/png" />'))),
-  div(style="padding: 1px 0px; width: '100%';",
+  list(tags$head(HTML('<link rel = "icon", href = "SRUC-logo.png", 
+                      type = "image/png" />'))),
+  div(style = "padding: 1px 0px; width: '100%';",
       titlePanel(
-        title="", windowTitle="Two-stage Sample Size Calculator"
+        title = "", windowTitle = "Two-stage Sample Size Calculator"
       )
   ),
   navbarPage(
-    title=div(a(href="http://www.sruc.ac.uk", class="navbar-link",
-                target="_blank",
-                img(src="SRUC-logo.png", height="50px")), 
+    title = div(a(href = "http://www.sruc.ac.uk", class = "navbar-link",
+                target = "_blank",
+                img(src = "SRUC-logo.png", height = "50px")), 
               "Sample Size Calculator"),
 ############################################
 #Background tab
@@ -53,25 +54,26 @@ shinyUI(fluidPage(
     sidebarLayout(
       #Sidebar with controls 
       sidebarPanel(
-        sliderInput("Test_sens", "Test Sensitivity (%)", min=1,max=100,
-                    value=65,step=1,ticks=F),
-        sliderInput("Test_spec", "Test Specificity (%)", min=1,max=100,
-                    value=80,step=1,ticks=F),
+        sliderInput("Test_sens", "Test Sensitivity (%)", min = 1, max = 100,
+                    value = 65, step = 1, ticks = F),
+        sliderInput("Test_spec", "Test Specificity (%)", min = 1, max = 100,
+                    value = 80, step = 1, ticks = F),
         sliderInput("Herd_spec", "Minimum Desired Herd Specificity (%)", 
-                    min=55,max=99,value=65,step=1,ticks=F),
-        sliderInput("Conf_slider","Confidence (%)", min=90,max=99,value=95,
-                    step=1,ticks=F),
-        sliderInput("Prev", "Animal level Prevalence (%)", min=1,max=100,
-                    value=20,step=1,ticks=F),
-        sliderInput("Herd_prev", "Herd level Prevalence (%)", min=1,max=50,
-                    value=5,step=1,ticks=F),
-        numericInput("Herd_size", "Herd Size", 200, min=1, max=2000, step=1),
-        checkboxInput("Log","Take Log of Number of Herds",value=FALSE),
+                    min = 55, max = 99, value = 65, step = 1, ticks = F),
+        sliderInput("Conf_slider","Confidence (%)", min = 90, max = 99,
+                    value = 95, step = 1, ticks = F),
+        sliderInput("Prev", "Animal level Prevalence (%)", min = 1, max = 100,
+                    value = 20,step = 1,ticks = F),
+        sliderInput("Herd_prev", "Herd level Prevalence (%)", min = 1, 
+                    max = 50, value = 5, step = 1, ticks = F),
+        numericInput("Herd_size", "Herd Size", 200, min = 1, max = 2000, 
+                     step = 1),
+        checkboxInput("Log","Take Log of Number of Herds", value = FALSE),
         ###Action button
         actionButton("goButton","Calculate Sample Size"),
         uiOutput("ggvis_ui")
       #finish sidebarPanel
-      ,width=3),           
+      ,width = 3),           
       #Main panel with all the output
       mainPanel(
           uiOutput("Error_text"),
@@ -79,7 +81,7 @@ shinyUI(fluidPage(
           ggvisOutput("ggvis"),
           uiOutput("Plot_notes")
       #finishing mainPanel
-      ,width=7) 
+      ,width = 7) 
     #finishing sidebarlayout                 
     ),
     #adding tooltips for all inputs using bsTooltip from shinyBS

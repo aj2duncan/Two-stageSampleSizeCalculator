@@ -1,7 +1,7 @@
 library(shiny)
 library(ggvis)
 library(dplyr)
-source("functions_v02.r",local=TRUE)
+source("functions_v02.r",local = TRUE)
 
 #Default values for Herd Sensitivity and Tolerance
 Herd_sens = c(0.55,0.65,0.75,0.85,0.95)
@@ -18,7 +18,7 @@ Results = reactive({
   #code for progress bar
   withProgress(message = 'Calculating values...', 
                detail = "Please wait...",
-               value=0,{
+               value = 0,{
                  Sys.sleep(1)
 
   #getting input
@@ -32,13 +32,13 @@ Results = reactive({
   Prev = isolate(input$Prev/100)
   Herd_prev = isolate(input$Herd_prev/100)
 
-  if(Test_sens + Test_spec >= 1){ #if test is valid run calculations
-    for(j in c(1:length(Herd_sens))){
+  if (Test_sens + Test_spec >= 1) { #if test is valid run calculations
+    for (j in c(1:length(Herd_sens))) {
       Number_animals = num_anim(Test_sens,Test_spec,Prev,Herd_size,
-                                1-Herd_sens[j],1-Herd_spec)
+                                1 - Herd_sens[j], 1 - Herd_spec)
       Calc_herd_sens = Number_animals[3]
       Calc_herd_spec = Number_animals[4]
-      for(i in c(1:3)){
+      for (i in c(1:3)) {
         Number_herds = num_herds(Conf,Tol[i],Calc_herd_sens,Calc_herd_spec,
                                  Herd_prev)
         Results_local = rbind(Results_local,
@@ -57,21 +57,21 @@ Results = reactive({
                                 "Herd.Specificity","Calc.Herd.Sensitivity",
                                 "Calc.Herd.Specificity","Number.Herds",
                                 "Number.Animals","Cutpoint")
-    Results_local = data.frame(Results_local,row.names=NULL)
+    Results_local = data.frame(Results_local,row.names = NULL)
     Results_with_errors = Results_local
-    if(length(which(Results_local$Number.Animals==-1))>0){
+    if (length(which(Results_local$Number.Animals == -1)) > 0) {
       Results_without_errors = Results_local[
-        -which(Results_local$Number.Animals==-1),]
+        -which(Results_local$Number.Animals == -1),]
     }else{
       Results_without_errors = Results_local
     }
-    Results_with_errors$
-      Number.Animals[which(Results_with_errors$Number.Animals==-1)] = 
+    Results_with_errors$Number.Animals[
+      which(Results_with_errors$Number.Animals == -1)] = 
       "Insufficient animals to achieve desired test performance."
     test_flag = 0
     return(list(Results_without_errors,Results_with_errors,test_flag))
   #finishing test if
-  }else{ #if test isn't valid return blank dataframes with error flag.
+  } else {#if test isn't valid return blank dataframes with error flag.
     #update progress bar
     incProgress(1)
     return(return_blanks()) #create and pass blank dataframes and flag
@@ -84,25 +84,24 @@ Results = reactive({
 
 #Reactive function to plot results
 make_ggvis = reactive({
-if(!is.null(Results()[[1]])){
+if (!is.null(Results()[[1]])) {
   Orange = colorRampPalette(c("darkorange4","gold"))
   Blue = colorRampPalette(c("darkblue","lightblue"))
-    if(input$Log==FALSE){
+    if (input$Log == FALSE) {
 #Plot results    
       Results()[[1]] %>%
         dplyr::mutate(Sensitivity = factor(Herd.Sensitivity),
                       Tolerance = factor(Tolerance)) %>%
-        ggvis(x=~Number.Animals,y=~Number.Herds) %>% 
+        ggvis(x = ~Number.Animals, y = ~Number.Herds) %>% 
         group_by(Tolerance) %>%
-        layer_paths(stroke=~Tolerance,strokeWidth:=2) %>%
+        layer_paths(stroke = ~Tolerance,strokeWidth := 2) %>%
         scale_nominal("stroke",
                       range = Blue(3)) %>%
         add_legend(scales = "stroke", title = "Tolerance",
                    properties = legend_props(
                      title = list(fontSize = 14),
                      labels = list(fontSize = 12, dx = 5),
-                     symbol = list(strokeWidth = 2,shape = "square")
-                    )) %>%  
+                     symbols = list(strokeWidth = 2,shape = "square"))) %>% 
         layer_points(fill = ~Sensitivity) %>%
         scale_nominal("fill",
                       range = Orange(5)) %>%
@@ -112,32 +111,31 @@ if(!is.null(Results()[[1]])){
                      labels = list(fontSize = 12, dx = 5),
                      legend = list(y = 75)
                     )) %>%
-        add_axis("x",title="Number of animals tested per herd") %>%
-        add_axis("y",title="Number of Herds",title_offset = 75) %>%
+        add_axis("x", title = "Number of animals tested per herd") %>%
+        add_axis("y", title = "Number of Herds",title_offset = 75) %>%
         add_tooltip(function(df) 
                     paste("<p>With a tolerance of",df$Tolerance,
                           "and a Herd sensitivity of &ge;",df$Sensitivity,
                           "</p>","<p>- the number of herds to be sampled is",
                           df$Number.Herds,"<p/>","<p>- the number of animals is"
                           ,df$Number.Animals,"<p/>")) %>%
-                    set_options(duration=0)
+                    set_options(duration = 0)
     }else{
 #Plot results with Log scale
       Results()[[1]] %>%
         dplyr::mutate(Sensitivity = factor(Herd.Sensitivity),
                       Tolerance = factor(Tolerance),
                       Log.Herds = log10(Number.Herds)) %>%
-        ggvis(x=~Number.Animals,y=~Log.Herds) %>% 
+        ggvis(x = ~Number.Animals, y = ~Log.Herds) %>% 
         group_by(Tolerance) %>%
-        layer_paths(stroke=~Tolerance,strokeWidth:=2) %>%
+        layer_paths(stroke = ~Tolerance, strokeWidth := 2) %>%
         scale_nominal("stroke",
                       range = Blue(3)) %>%
         add_legend(scales = "stroke", title = "Tolerance",
                    properties = legend_props(
                      title = list(fontSize = 14),
                      labels = list(fontSize = 12, dx = 5),
-                     symbol = list(strokeWidth = 2,shape = "square")
-                   )) %>%  
+                     symbols = list(strokeWidth = 2,shape = "square"))) %>%
         layer_points(fill = ~Sensitivity) %>%
         scale_nominal("fill",
                       range = Orange(5)) %>%
@@ -147,9 +145,9 @@ if(!is.null(Results()[[1]])){
                      labels = list(fontSize = 12, dx = 5),
                      legend = list(y = 75)
                    )) %>%
-        add_axis("x",title="Number of animals tested per herd") %>%
-        add_axis("y",title="Log(Number of Herds)",title_offset = 75) %>%
-        set_options(duration=0)
+        add_axis("x", title = "Number of animals tested per herd") %>%
+        add_axis("y", title = "Log(Number of Herds)",title_offset = 75) %>%
+        set_options(duration = 0)
   #finishing Log if statement
     }
 }
@@ -163,7 +161,7 @@ make_ggvis %>% bind_shiny("ggvis", "ggvis_ui")
 #Plot Title
 output$Plot_title = renderUI({
   #only plot title if we actually have results
-  if(!is.null(Results()[[1]]) && Results()[[3]] != 1){ 
+  if (!is.null(Results()[[1]]) && Results()[[3]] != 1) { 
     HTML('<p style="font-size:20px; font-weight:bold; text-align:center"> 
         Number of Herds Sampled vs Number of Animals Sampled 
         </p>')
@@ -173,16 +171,16 @@ output$Plot_title = renderUI({
 #Errors
 output$Error_text = renderUI({
   #if the test wasn't valid report the error
-  if(Results()[[3]] == 1){
+  if (Results()[[3]] == 1) {
      HTML('<p style="font-size:15px; color:red">Please ensure that the test 
           sensitivity and test specificity sum to at least 100%.</p>')
   #if there were values we couldn't calculate output those with errors
-  }else if(nrow(Results()[[1]])==0){ #if we have no results at all
+  }else if (nrow(Results()[[1]]) == 0) { #if we have no results at all
     HTML('<p style="font-size:15px; color:red">When the above calculation was 
          attempted the number of animals could not be calculated. The values 
          attempted are shown in the tabulated results.</p>')
   
-  }else if(nrow(Results()[[1]])!=15){ #if we don't have all the results
+  }else if (nrow(Results()[[1]]) != 15) { #if we don't have all the results
     HTML('<p style="font-size:15px; color:red">When the above calculation was 
          attempted the values of the number of animals could not be calculated 
          for certain tolerances and herd sensitivities. All values are shown in 
@@ -193,7 +191,7 @@ output$Error_text = renderUI({
 #Notes - to sit just below the plot for a little more explanation
 output$Plot_notes = renderUI({
   #only plot notes if we actually have results
-  if(nrow(Results()[[1]])!=0){ 
+  if (nrow(Results()[[1]]) != 0) { 
     HTML('<p style="font-size:18px; font-weight:bold; text-align:left"> 
          Notes 
          </p>
@@ -214,22 +212,31 @@ output$Plot_notes = renderUI({
   }
   })
 
+#constructing table for data
+data = function(){
+  d1 = Results()[[2]][,-c(1:6,9,14)]
+  d1[,c(1,2)] = 100*d1[c(1,2)]
+  d1[,c(3,4)] = 100*round(d1[c(3,4)],4)
+  d1[,6] = as.numeric(d1[,6]) # forcing the number of animals to be numeric.
+  return(d1)
+}
+
+
 #Table
 output$Results_table = renderDataTable({
-    data = Results()[[2]][,-c(1:6,9,14)]
-    data[,c(1,2)] = 100*data[c(1,2)]
-    data[,c(3,4)] = 100*round(data[c(3,4)],4)
-    colnames(data)=c("Tolerance(%)","Minimum Desired Herd Sensitivity(%)",
-                   "Calculated Herd Sensitivity(%)",
-                   "Calculated Herd Specificity(%)",
-                   "Number of Herds","Number of Animals")
-    return(data)
-    }, options = list(paging=FALSE,searching=FALSE),escape=FALSE
-)
+  datatable(data(), 
+            colnames = c("Tolerance(%)","Minimum Desired Herd Sensitivity(%)",
+                           "Calculated Herd Sensitivity(%)",
+                           "Calculated Herd Specificity(%)",
+                           "Number of Herds","Number of Animals"),
+            rownames = FALSE,
+            options = list(paging = FALSE, searching = FALSE), 
+            escape = FALSE)
+})
 
 #Table notes 
 output$Table_notes = renderUI({
-  if(Results()[[3]] != 1){
+  if (Results()[[3]] != 1) {
     HTML('<p style="font-size:18px; font-weight:bold; text-align:left"> 
            Notes 
           </p>
@@ -246,10 +253,10 @@ output$Table_notes = renderUI({
 #Exporting Results
 output$Export_results = downloadHandler(
     filename = function() {
-      paste('SampleSizeCalculations-', Sys.Date(), '.csv', sep='')
+      paste('SampleSizeCalculations-', Sys.Date(), '.csv', sep = '')
     },
     content = function(file) {
-      write.csv(Results()[[2]], file, row.names=FALSE)
+      write.csv(Results()[[2]], file, row.names = FALSE)
     }
 )
 
