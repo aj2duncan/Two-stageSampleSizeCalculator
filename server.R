@@ -217,7 +217,7 @@ data = function(){
   d1 = Results()[[2]][,-c(1:6,9,14)]
   d1[,c(1,2)] = 100*d1[c(1,2)]
   d1[,c(3,4)] = 100*round(d1[c(3,4)],4)
-  d1[,6] = as.numeric(d1[,6]) # forcing the number of animals to be numeric.
+  #d1[,6] = as.numeric(d1[,6]) # forcing the number of animals to be numeric.
   return(d1)
 }
 
