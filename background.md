@@ -46,7 +46,7 @@ This two-stage sample size calculator was built by <a target="_blank" href="http
 
 
 <div style='text-align:center'>
-<a target="_blank" href="http:///www.sruc.ac.uk"><img src="SRUC-logo.png"></a>
+<a target="_blank" href="http:///epidemiology.sruc.ac.uk"><img src="SRUC-logo.png"></a>
 <a target="_blank" href="http://www.inverness.uhi.ac.uk/"><img src="IC-logo.jpg"></a> 
 </div>
 
