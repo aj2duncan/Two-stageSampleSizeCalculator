@@ -32,7 +32,7 @@ shinyUI(fluidPage(
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="https://epidemiology.sruc.ac.uk/">SRUC: Epidemiology Unit</a>
+            <a class="navbar-brand" href="https://epidemiology.sruc.ac.uk/">SRUC: Epidemiology Resources</a>
           </div>
           <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
