@@ -38,7 +38,7 @@ The results are expressed as the number of animals needing tested plotted agains
 
 ### References
 
-[1]:[Humphry et. al., 2004, A Practical Approach to calculate sample size for her prevalence surveys, Prev. Vet Med., 65, 173-188.](http://www.sciencedirect.com/science/article/pii/S0167587704001412)
+[1]:[Humphry et. al., 2004, A practical approach to calculate sample size for herd prevalence surveys, Prev. Vet Med., 65, 173-188.](http://www.sciencedirect.com/science/article/pii/S0167587704001412)
 
 ------
 
