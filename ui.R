@@ -10,8 +10,7 @@ library(DT)
 # constructing navbar with logo
 ###########################################
 shinyUI(fluidPage(
-  list(tags$head(HTML('<link rel = "icon", href = "SRUC-logo.png", 
-                      type = "image/png" />'))),
+  list(tags$head(HTML())),
   div(style = "padding: 1px 0px; width: '100%';",
       titlePanel(
         title = "", windowTitle = "Two-stage Sample Size Calculator"
