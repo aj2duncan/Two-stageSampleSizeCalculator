@@ -18,10 +18,7 @@ shinyUI(fluidPage(
       )
   ),
   navbarPage(
-    title = div(a(href = "https://epidemiology.sruc.ac.uk/apps/", class = "navbar-link",
-                target = "_blank",
-                img(src = "SRUC-logo.png", height = "50px")), 
-              "Sample Size Calculator"),
+    title = div("Sample Size Calculator"),
 ############################################
 #Background tab
 ############################################
