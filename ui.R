@@ -39,7 +39,7 @@ shinyUI(fluidPage(
               <li><a href="https://epidemiology.sruc.ac.uk/">Home</a></li>
               <li><a href="http://www.sruc.ac.uk/info/120249/epidemiology_research_unit">About the Epi Unit</a></li>
               <li><a href="https://epidemiology.sruc.ac.uk/models/">Models</a></li>
-			  <li class="active"><a href="https://epidemiology.sruc.ac.uk/shiny/apps/">Applications</a></li>
+			  <li class="active"><a href="https://epidemiology.sruc.ac.uk/apps/">Applications</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
