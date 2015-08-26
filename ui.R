@@ -10,20 +10,49 @@ library(DT)
 # constructing navbar with logo
 ###########################################
 shinyUI(fluidPage(
-  list(tags$head(HTML())),
+  list(tags$head(HTML('<!-- Bootstrap core CSS -->
+    <link href="https://epidemiology.sruc.ac.uk/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+                      <!-- Bootstrap theme -->
+                      <link href="https://epidemiology.sruc.ac.uk/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+                      
+                      <!-- Custom styles for this template -->
+                      <link href="https://epidemiology.sruc.ac.uk/bootstrap/css/custom.css" rel="stylesheet">
+                      '))),
   div(style = "padding: 1px 0px; width: '100%';",
       titlePanel(
         title = "", windowTitle = "Two-stage Sample Size Calculator"
       )
   ),
+  div(HTML('<nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://epidemiology.sruc.ac.uk/">SRUC: Epidemiology Unit</a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="https://epidemiology.sruc.ac.uk/">Home</a></li>
+              <li><a href="http://www.sruc.ac.uk/info/120249/epidemiology_research_unit">About the Epi Unit</a></li>
+              <li><a href="https://epidemiology.sruc.ac.uk/models/">Models</a></li>
+			  <li class="active"><a href="https://epidemiology.sruc.ac.uk/shiny/apps/">Applications</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+      ')),
   navbarPage(
     title = div("Sample Size Calculator"),
 ############################################
 #Background tab
 ############################################
   tabPanel("Background",
-    includeCSS("css/bootstrap.css"),
-    includeCSS("css/styles.css"),
+#    includeCSS("css/bootstrap.css"),
+    includeCSS("css/sliders.css"),
     fluidRow(
       column(2),#blank for the moment
       column(8,

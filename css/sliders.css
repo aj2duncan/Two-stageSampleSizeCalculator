@@ -1,0 +1,24 @@
+/* changing color of sliders */
+.irs-bar {
+  border-top: 1px solid #92BD1E;
+  border-bottom: 1px solid #92BD1E;
+  background: #92BD1E;
+}
+.irs-bar-edge {
+  border: 1px solid #92BD1E;
+  background: #92BD1E;
+}
+.irs-from, .irs-to, .irs-single {
+    background: #92BD1E;
+}
+.irs-grid-pol {
+    background: #92BD1E;
+}
+
+.shiny-progress .bar {
+  background: #006633;
+}
+.shiny-progress .progress-text {
+  background-color: #fff;
+  color: #006633;
+}
