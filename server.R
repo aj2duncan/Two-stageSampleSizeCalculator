@@ -228,7 +228,7 @@ output$Results_table = renderDataTable({
             colnames = c("Tolerance(%)","Minimum Desired Herd Sensitivity(%)",
                            "Calculated Herd Sensitivity(%)",
                            "Calculated Herd Specificity(%)",
-                           "Number of Herds","Number of Animals"),
+                           "Number of Herds","Animals per Herd"),
             rownames = FALSE,
             options = list(paging = FALSE, searching = FALSE), 
             escape = FALSE)
