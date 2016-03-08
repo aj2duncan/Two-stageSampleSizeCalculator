@@ -17,7 +17,8 @@ shinyUI(fluidPage(
                       
                       <!-- Custom styles for this template -->
                       <link href="https://epidemiology.sruc.ac.uk/bootstrap/css/custom.css" rel="stylesheet">
-                      '))),
+                      ')),
+       tags$head(includeScript("www/google_analytics.js"))),
   div(style = "padding: 1px 0px; width: '100%';",
       titlePanel(
         title = "", windowTitle = "Two-stage Sample Size Calculator"
