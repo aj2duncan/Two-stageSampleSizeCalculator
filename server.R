@@ -1,6 +1,10 @@
 library(shiny)
 library(ggvis)
 library(dplyr)
+
+initial_values = tbl_df(read.csv("initial_values.csv", 
+                          stringsAsFactors = FALSE))
+
 source("functions_v02.r",local = TRUE)
 
 #Default values for Herd Sensitivity and Tolerance
@@ -9,8 +13,14 @@ Tol = c(0.025,0.05,0.10)
 
 #start shiny function
 shinyServer(function(input, output, session) {
-#start main reactive function  
-Results = reactive({
+  
+Results = reactiveValues(data_for_plot = initial_values,
+                         data_for_table = initial_values, 
+                         error_flag = 0,
+                         num_problems = 0)
+  
+# listening to goButton which will let us change the values in the list  
+observeEvent(input$goButton, {
   Results_local = c()
   Calc_herd_sens = 0
   Calc_herd_spec = 0
@@ -22,8 +32,6 @@ Results = reactive({
                  Sys.sleep(1)
 
   #getting input
-  input$goButton  #reactive on pressing button not on changing of values
-                  #values below are isolated
   Test_sens = isolate(input$Test_sens/100)
   Test_spec = isolate(input$Test_spec/100)
   Herd_spec = isolate(input$Herd_spec/100)
@@ -59,7 +67,8 @@ Results = reactive({
                                 "Number.Animals","Cutpoint")
     Results_local = data.frame(Results_local,row.names = NULL)
     Results_with_errors = Results_local
-    if (length(which(Results_local$Number.Animals == -1)) > 0) {
+    num_problems = length(which(Results_local$Number.Animals == -1))
+    if (num_problems > 0) {
       Results_without_errors = Results_local[
         -which(Results_local$Number.Animals == -1),]
     }else{
@@ -69,27 +78,39 @@ Results = reactive({
       which(Results_with_errors$Number.Animals == -1)] = 
       "Insufficient animals to achieve desired test performance."
     test_flag = 0
-    return(list(Results_without_errors,Results_with_errors,test_flag))
+    
+    # change reactive values
+    Results$data_for_plot = Results_without_errors
+    Results$data_for_table = Results_with_errors
+    Results$error_flag = test_flag
+    Results$num_problems = num_problems
   #finishing test if
   } else {#if test isn't valid return blank dataframes with error flag.
     #update progress bar
     incProgress(1)
-    return(return_blanks()) #create and pass blank dataframes and flag
+    
+    blank_results = return_blanks()
+    # change reactive values
+    Results$data_for_plot = blank_results$Results_without_errors
+    Results$data_for_table = blank_results$Results_with_errors
+    Results$error_flag = 1
+    Results$num_problems = 15
   }
   
   #finishing progress bar
   })
-#finishing Results function  
+#finishing observeEvent
 })
 
 #Reactive function to plot results
 make_ggvis = reactive({
-if (!is.null(Results()[[1]])) {
+
+if (Results$num_problems != 15 && Results$error_flag != 1) {
   Orange = colorRampPalette(c("darkorange4","gold"))
   Blue = colorRampPalette(c("darkblue","lightblue"))
     if (input$Log == FALSE) {
 #Plot results    
-      Results()[[1]] %>%
+      Results$data_for_plot %>%
         dplyr::mutate(Sensitivity = factor(Herd.Sensitivity),
                       Tolerance = factor(Tolerance)) %>%
         ggvis(x = ~Number.Animals, y = ~Number.Herds) %>% 
@@ -122,7 +143,7 @@ if (!is.null(Results()[[1]])) {
                     set_options(duration = 0)
     }else{
 #Plot results with Log scale
-      Results()[[1]] %>%
+      Results$data_for_plot %>%
         dplyr::mutate(Sensitivity = factor(Herd.Sensitivity),
                       Tolerance = factor(Tolerance),
                       Log.Herds = log10(Number.Herds)) %>%
@@ -150,6 +171,12 @@ if (!is.null(Results()[[1]])) {
         set_options(duration = 0)
   #finishing Log if statement
     }
+} else {# blank plot for case when sensitivity + specificify < 100
+  data.frame(x = 0, y = 0) %>% 
+    ggvis(~x, ~y, size := 1) %>%
+    layer_points() %>%
+    add_axis("x", title = "Number of animals tested per herd") %>%
+    add_axis("y", title = "Number of Herds",title_offset = 75)
 }
 })  
 
@@ -161,7 +188,7 @@ make_ggvis %>% bind_shiny("ggvis", "ggvis_ui")
 #Plot Title
 output$Plot_title = renderUI({
   #only plot title if we actually have results
-  if (!is.null(Results()[[1]]) && Results()[[3]] != 1) { 
+  if (!is.null(Results$data_for_plot) && Results$error_flag != 1) { 
     HTML('<p style="font-size:20px; font-weight:bold; text-align:center"> 
         Number of Herds Sampled vs Number of Animals Sampled 
         </p>')
@@ -171,16 +198,17 @@ output$Plot_title = renderUI({
 #Errors
 output$Error_text = renderUI({
   #if the test wasn't valid report the error
-  if (Results()[[3]] == 1) {
+  if (Results$error_flag == 1) {
      HTML('<p style="font-size:15px; color:red">Please ensure that the test 
           sensitivity and test specificity sum to at least 100%.</p>')
   #if there were values we couldn't calculate output those with errors
-  }else if (nrow(Results()[[1]]) == 0) { #if we have no results at all
+  }else if (Results$num_problems == 15) { #if we have no results at all
     HTML('<p style="font-size:15px; color:red">When the above calculation was 
          attempted the number of animals could not be calculated. The values 
          attempted are shown in the tabulated results.</p>')
   
-  }else if (nrow(Results()[[1]]) != 15) { #if we don't have all the results
+  }else if (Results$num_problems > 0 && Results$num_problems < 15) { 
+    #if we don't have all the results
     HTML('<p style="font-size:15px; color:red">When the above calculation was 
          attempted the values of the number of animals could not be calculated 
          for certain tolerances and herd sensitivities. All values are shown in 
@@ -191,7 +219,7 @@ output$Error_text = renderUI({
 #Notes - to sit just below the plot for a little more explanation
 output$Plot_notes = renderUI({
   #only plot notes if we actually have results
-  if (nrow(Results()[[1]]) != 0) { 
+  if (Results$num_problems != 15) { 
     HTML('<p style="font-size:18px; font-weight:bold; text-align:left"> 
          Notes 
          </p>
@@ -214,7 +242,7 @@ output$Plot_notes = renderUI({
 
 #constructing table for data
 data = function(){
-  d1 = Results()[[2]][,-c(1:6,9,14)]
+  d1 = Results$data_for_table[,-c(1:6,9,14)]
   d1[,c(1,2)] = 100*d1[c(1,2)]
   d1[,c(3,4)] = 100*round(d1[c(3,4)],4)
   #d1[,6] = as.numeric(d1[,6]) # forcing the number of animals to be numeric.
@@ -236,7 +264,7 @@ output$Results_table = renderDataTable({
 
 #Table notes 
 output$Table_notes = renderUI({
-  if (Results()[[3]] != 1) {
+  if (Results$error_flag != 1) {
     HTML('<p style="font-size:18px; font-weight:bold; text-align:left"> 
            Notes 
           </p>
@@ -256,7 +284,7 @@ output$Export_results = downloadHandler(
       paste('SampleSizeCalculations-', Sys.Date(), '.csv', sep = '')
     },
     content = function(file) {
-      write.csv(Results()[[2]], file, row.names = FALSE)
+      write.csv(Results$data_for_table, file, row.names = FALSE)
     }
 )
 

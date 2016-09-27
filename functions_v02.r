@@ -110,8 +110,7 @@ return_blanks = function(){
                                             Number.Herds=numeric(0),
                                             Number.Animals=numeric(0),
                                             Cutpoint=numeric(0)))
-  test_flag = 1
-  return(list(Results_without_errors,Results_with_errors,test_flag))
+  return(list(Results_without_errors,Results_with_errors))
 }
 
 
